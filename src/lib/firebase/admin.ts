@@ -25,6 +25,6 @@ if (!admin.apps.length) {
   }
 }
 
-const db = admin.firestore();
+const db = (admin.apps.length > 0 ? admin.firestore() : null) as admin.firestore.Firestore;
 
 export { admin, db };

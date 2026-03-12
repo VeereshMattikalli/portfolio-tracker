@@ -3,6 +3,8 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
 import { getDb } from "@/lib/firebase/admin";
 
+export const dynamic = 'force-dynamic';
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({

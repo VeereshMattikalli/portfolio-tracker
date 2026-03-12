@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcrypt";
-import { db } from "@/lib/firebase/admin";
+import { getDb } from "@/lib/firebase/admin";
 
 export async function POST(request: Request) {
   try {
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
     if (!email || !password) {
       return NextResponse.json({ error: "Missing email or password" }, { status: 400 });
     }
-    
+    const db = getDb();
     if (!db) {
       throw new Error("Firestore Admin not initialized");
     }

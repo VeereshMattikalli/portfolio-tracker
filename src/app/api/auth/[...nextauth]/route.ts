@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import { db } from "@/lib/firebase/admin";
+import { getDb } from "@/lib/firebase/admin";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -17,6 +17,7 @@ export const authOptions: NextAuthOptions = {
         }
         
         // Find user by email in Firestore
+        const db = getDb();
         if (!db) {
           throw new Error("Firestore Admin not initialized");
         }

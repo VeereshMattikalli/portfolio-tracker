@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../auth/[...nextauth]/route";
-import { db } from "@/lib/firebase/admin";
+import { getDb } from "@/lib/firebase/admin";
 
 export async function GET(request: Request) {
   try {
@@ -11,6 +11,7 @@ export async function GET(request: Request) {
     }
 
     const userId = (session.user as any).id;
+    const db = getDb();
     if (!db) {
       throw new Error("Firestore Admin not initialized");
     }
@@ -53,7 +54,7 @@ export async function POST(request: Request) {
     if (!name) {
       return NextResponse.json({ error: "Portfolio name is required" }, { status: 400 });
     }
-    
+    const db = getDb();
     if (!db) {
       throw new Error("Firestore Admin not initialized");
     }

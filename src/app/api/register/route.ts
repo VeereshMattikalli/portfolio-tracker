@@ -13,7 +13,7 @@ export async function POST(request: Request) {
     }
     const db = getDb();
     if (!db) {
-      throw new Error("Firestore Admin not initialized");
+      return NextResponse.json({ error: "Firebase not initialized" }, { status: 503 });
     }
 
     // Check for existing user

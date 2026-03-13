@@ -15,7 +15,7 @@ export async function GET(request: Request) {
     const userId = (session.user as any).id;
     const db = getDb();
     if (!db) {
-      throw new Error("Firestore Admin not initialized");
+      return NextResponse.json({ error: "Firebase not initialized" }, { status: 503 });
     }
 
     // Query portfolios collection where userId matches

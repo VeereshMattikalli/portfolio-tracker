@@ -37,7 +37,11 @@ export function getDb(): admin.firestore.Firestore | null {
   if (!admin.apps.length) {
     return null;
   }
-  return admin.firestore();
+  
+  try {
+    return admin.firestore();
+  } catch (error) {
+    console.error('Error accessing Firestore:', error);
+    return null;
+  }
 }
-
-export { admin };

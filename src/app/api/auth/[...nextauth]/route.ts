@@ -21,7 +21,7 @@ export const authOptions: NextAuthOptions = {
         // Find user by email in Firestore
         const db = getDb();
         if (!db) {
-          throw new Error("Firestore Admin not initialized");
+          throw new Error("Firebase not initialized");
         }
         const usersRef = db.collection("users");
         const snapshot = await usersRef.where("email", "==", credentials.email).limit(1).get();

@@ -1,7 +1,7 @@
 import NextAuth, { NextAuthOptions } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import bcrypt from "bcrypt";
-import { getDb } from "@/lib/firebase/admin";
+import { prisma } from "@/lib/prisma";
 
 export const dynamic = 'force-dynamic';
 
@@ -18,20 +18,14 @@ export const authOptions: NextAuthOptions = {
           throw new Error("Invalid credentials");
         }
         
-        // Find user by email in Firestore
-        const db = getDb();
-        if (!db) {
-          throw new Error("Firebase not initialized");
-        }
-        const usersRef = db.collection("users");
-        const snapshot = await usersRef.where("email", "==", credentials.email).limit(1).get();
+        // Find user by email
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+        });
 
-        if (snapshot.empty) {
+        if (!user) {
           throw new Error("User not found");
         }
-
-        const userDoc = snapshot.docs[0];
-        const user = { id: userDoc.id, ...userDoc.data() } as any;
 
         const isPasswordValid = await bcrypt.compare(credentials.password, user.passwordHash);
 

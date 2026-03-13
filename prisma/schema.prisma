@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mongodb"
   url      = env("DATABASE_URL")
 }
 
 model User {
-  id            String      @id @default(cuid())
+  id            String      @id @default(cuid()) @map("_id")
   name          String?
   email         String      @unique
   passwordHash  String
@@ -17,10 +17,12 @@ model User {
   updatedAt     DateTime    @updatedAt
 
   portfolios    Portfolio[]
+
+  @@map("users")
 }
 
 model Portfolio {
-  id          String   @id @default(cuid())
+  id          String   @id @default(cuid()) @map("_id")
   name        String
   description String?
   createdAt   DateTime @default(now())
@@ -30,10 +32,12 @@ model Portfolio {
   user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   assets      Asset[]
+
+  @@map("portfolios")
 }
 
 model Asset {
-  id            String   @id @default(cuid())
+  id            String   @id @default(cuid()) @map("_id")
   name          String
   tickerSymbol  String
   type          String   // "Stock", "Mutual Fund", "ETF", "Commodity", "Crypto"
@@ -48,10 +52,12 @@ model Asset {
   portfolio     Portfolio @relation(fields: [portfolioId], references: [id], onDelete: Cascade)
 
   transactions  Transaction[]
+
+  @@map("assets")
 }
 
 model Transaction {
-  id               String   @id @default(cuid())
+  id               String   @id @default(cuid()) @map("_id")
   type             String   // "BUY" or "SELL"
   quantity         Float    // Number of shares/units transacted
   price            Float    // Price per unit
@@ -62,4 +68,6 @@ model Transaction {
 
   assetId          String
   asset            Asset    @relation(fields: [assetId], references: [id], onDelete: Cascade)
+
+  @@map("transactions")
 }
